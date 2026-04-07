@@ -18,6 +18,9 @@ from storage.queries import (
 )
 from web.api import router as api_router
 
+import os
+ROOT_PATH = os.environ.get("ROOT_PATH", "")
+
 app = FastAPI(title="训练分析系统")
 
 templates_dir = Path(__file__).parent / "templates"
@@ -56,6 +59,7 @@ def format_sport(sport):
 templates.env.filters['pace'] = format_pace
 templates.env.filters['duration'] = format_duration
 templates.env.filters['sport_cn'] = format_sport
+templates.env.globals['base'] = ROOT_PATH
 
 
 @app.on_event("startup")

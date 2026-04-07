@@ -1,7 +1,7 @@
 // Chart.js 数据加载函数
 
 async function loadPMC(canvasId) {
-    const res = await fetch('/api/pmc?days=90');
+    const res = await fetch((window.BASE_PATH || '') + '/api/pmc?days=90');
     const data = await res.json();
 
     new Chart(document.getElementById(canvasId), {
@@ -65,7 +65,7 @@ async function loadPMC(canvasId) {
 }
 
 async function loadWeeklyVolume(canvasId) {
-    const res = await fetch('/api/weekly-volume?weeks=12');
+    const res = await fetch((window.BASE_PATH || '') + '/api/weekly-volume?weeks=12');
     const data = await res.json();
 
     new Chart(document.getElementById(canvasId), {
@@ -100,7 +100,7 @@ async function loadWeeklyVolume(canvasId) {
 }
 
 async function loadZoneDistribution(canvasId) {
-    const res = await fetch('/api/zone-distribution?days=14');
+    const res = await fetch((window.BASE_PATH || '') + '/api/zone-distribution?days=14');
     const data = await res.json();
 
     if (!data.labels.length) return;

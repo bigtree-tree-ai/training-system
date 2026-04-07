@@ -31,7 +31,7 @@ async function triggerMacro() {
     btn.disabled = true;
     btn.textContent = '分析中，请稍候...';
     try {
-        const resp = await fetch('/api/analyze/macro?days=30', {method: 'POST'});
+        const resp = await fetch('{{ base }}/api/analyze/macro?days=30', {method: 'POST'});
         const data = await resp.json();
         if (data.success) {
             location.reload();

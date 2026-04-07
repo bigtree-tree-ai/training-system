@@ -5,7 +5,7 @@
 <h1>训练记录 <span class="text-muted">(共{{ total }}条)</span></h1>
 
 <div class="filters">
-    <a href="/sessions" class="btn {% if not sport %}btn-active{% endif %}">全部</a>
+    <a href="{{ base }}/sessions" class="btn {% if not sport %}btn-active{% endif %}">全部</a>
     <a href="/sessions?sport=running" class="btn {% if sport == 'running' %}btn-active{% endif %}">跑步</a>
     <a href="/sessions?sport=cycling" class="btn {% if sport == 'cycling' %}btn-active{% endif %}">骑行</a>
     <a href="/sessions?sport=training" class="btn {% if sport == 'training' %}btn-active{% endif %}">力量</a>
@@ -29,7 +29,7 @@
     </thead>
     <tbody>
         {% for s in sessions %}
-        <tr onclick="location.href='/sessions/{{ s.id }}'">
+        <tr onclick="location.href='{{ base }}/sessions/{{ s.id }}'">
             <td>{{ s.start_time[:10] if s.start_time else '-' }}</td>
             <td>{{ s.sport|sport_cn }}</td>
             <td>{{ "%.1f km"|format(s.distance_km) if s.distance_km else '-' }}</td>

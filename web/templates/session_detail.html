@@ -2,7 +2,7 @@
 {% block title %}{{ session.start_time[:10] }} {{ session.sport|sport_cn }} — 训练详情{% endblock %}
 
 {% block content %}
-<a href="/sessions" class="back-link">&larr; 返回列表</a>
+<a href="{{ base }}/sessions" class="back-link">&larr; 返回列表</a>
 
 <h1>{{ session.start_time[:10] }} {{ session.sport|sport_cn }}
     {% if session.distance_km %}{{ "%.1f"|format(session.distance_km) }}km{% endif %}
@@ -141,7 +141,7 @@ async function triggerAI(sid) {
     btn.textContent = '分析中...';
     content.textContent = '正在调用AI分析，请稍候...';
     try {
-        const resp = await fetch(`/api/analyze/session/${sid}`, {method: 'POST'});
+        const resp = await fetch(`{{ base }}/api/analyze/session/${sid}`, {method: 'POST'});
         const data = await resp.json();
         if (data.success) {
             location.reload();

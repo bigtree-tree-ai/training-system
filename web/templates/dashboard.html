@@ -85,7 +85,7 @@
         </thead>
         <tbody>
             {% for s in recent_sessions %}
-            <tr onclick="location.href='/sessions/{{ s.id }}'">
+            <tr onclick="location.href='{{ base }}/sessions/{{ s.id }}'">
                 <td>{{ s.start_time[:10] if s.start_time else '-' }}</td>
                 <td>{{ s.sport|sport_cn }}</td>
                 <td>{{ "%.1f km"|format(s.distance_km) if s.distance_km else '-' }}</td>
@@ -112,7 +112,7 @@ async function runPipeline() {
     btn.disabled = true;
     btn.textContent = '处理中...';
     try {
-        const resp = await fetch('/api/pipeline', {method: 'POST'});
+        const resp = await fetch('{{ base }}/api/pipeline', {method: 'POST'});
         const data = await resp.json();
         if (data.success) {
             btn.textContent = '完成! ' + data.steps.join(', ');
