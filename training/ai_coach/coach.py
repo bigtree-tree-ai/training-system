@@ -67,13 +67,15 @@ def macro_review(days: int = 30, save: bool = True) -> str:
 
     if save and not result.startswith("[错误]"):
         conn = get_conn()
-        conn.execute("""
-            INSERT INTO ai_reports (report_type, reference_id, reference_date, model_used, ai_response)
-            VALUES (?, ?, DATE('now'), ?, ?)
-        """, (f'macro_{days}d', f'last_{days}_days', os.getenv("ANTHROPIC_DEFAULT_SONNET_MODEL", "claude-sonnet-4-20250514"), result))
-        conn.commit()
-        conn.close()
-        print("报告已保存到ai_reports表", file=sys.stderr)
+        try:
+            conn.execute("""
+                INSERT INTO ai_reports (report_type, reference_id, reference_date, model_used, ai_response)
+                VALUES (?, ?, DATE('now'), ?, ?)
+            """, (f'macro_{days}d', f'last_{days}_days', os.getenv("ANTHROPIC_DEFAULT_SONNET_MODEL", "claude-sonnet-4-20250514"), result))
+            conn.commit()
+            print("报告已保存到ai_reports表", file=sys.stderr)
+        finally:
+            conn.close()
 
     return result
 

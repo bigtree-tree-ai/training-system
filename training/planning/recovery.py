@@ -9,36 +9,32 @@ def get_recovery_report() -> str:
     """输出当前恢复状态报告"""
     init_db()
     conn = get_conn()
+    try:
+        latest = conn.execute("""
+            SELECT * FROM sessions WHERE sport='running' ORDER BY start_time DESC LIMIT 1
+        """).fetchone()
 
-    # 最近一次训练
-    latest = conn.execute("""
-        SELECT * FROM sessions WHERE sport='running' ORDER BY start_time DESC LIMIT 1
-    """).fetchone()
+        pmc = conn.execute("""
+            SELECT date, atl, ctl, tsb, acwr, training_status, monotony, strain
+            FROM daily_load ORDER BY date DESC LIMIT 1
+        """).fetchone()
 
-    # 当前PMC
-    pmc = conn.execute("""
-        SELECT date, atl, ctl, tsb, acwr, training_status, monotony, strain
-        FROM daily_load ORDER BY date DESC LIMIT 1
-    """).fetchone()
+        recent_7d = conn.execute("""
+            SELECT COUNT(*) as cnt,
+                   SUM(COALESCE(hr_tss, 0)) as total_tss,
+                   SUM(COALESCE(distance_km, 0)) as total_km
+            FROM sessions
+            WHERE sport='running' AND start_time >= DATE('now', '-7 days')
+        """).fetchone()
 
-    # 最近7天训练
-    recent_7d = conn.execute("""
-        SELECT COUNT(*) as cnt,
-               SUM(COALESCE(hr_tss, 0)) as total_tss,
-               SUM(COALESCE(distance_km, 0)) as total_km
-        FROM sessions
-        WHERE sport='running' AND start_time >= DATE('now', '-7 days')
-    """).fetchone()
-
-    # 连续训练天数
-    consecutive = _count_consecutive_days(conn)
-
-    conn.close()
+        consecutive = count_consecutive_days(conn)
+    finally:
+        conn.close()
 
     return _format_recovery_report(latest, pmc, recent_7d, consecutive)
 
 
-def _count_consecutive_days(conn) -> int:
+def count_consecutive_days(conn) -> int:
     """计算连续训练天数"""
     rows = conn.execute("""
         SELECT DISTINCT DATE(start_time) as d FROM sessions

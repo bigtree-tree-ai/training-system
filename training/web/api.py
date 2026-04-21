@@ -130,9 +130,10 @@ async def comparison_api(days: int = 30):
 async def session_comparison(session_id: int):
     """单次训练历史对比API"""
     from training.services.session_service import get_session_detail
+    from fastapi import HTTPException
     data = get_session_detail(session_id)
     if not data:
-        return {"error": "Session not found"}
+        raise HTTPException(status_code=404, detail="Session not found")
     return {"comparison": data.get('comparison')}
 
 
@@ -155,8 +156,13 @@ def trigger_session_analysis(session_id: int):
 
 
 @router.post("/pipeline")
-def run_pipeline():
-    """一键全流程: 导入→分析→专业指标"""
+def run_pipeline(key: str = None):
+    """一键全流程: 导入→分析→专业指标（需要API key）"""
+    import os
+    expected = os.getenv("TRAIN_API_KEY", "training-v3-key")
+    if key != expected:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=403, detail="Invalid API key")
     results = []
     try:
         from training.data_import.batch_import import scan_and_import

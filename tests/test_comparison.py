@@ -2,6 +2,7 @@
 import pytest
 from training.services.comparison_service import compare_periods
 from training.services.session_service import get_session_detail
+from training.storage.queries import get_session_count
 
 
 class TestComparePeriods:
@@ -24,9 +25,22 @@ class TestComparePeriods:
 
 
 class TestSessionComparison:
+    def _get_latest_session_id(self):
+        """动态获取最新session_id，不硬编码"""
+        from training.storage.db import get_conn, init_db
+        init_db()
+        conn = get_conn()
+        try:
+            row = conn.execute("SELECT id FROM sessions ORDER BY start_time DESC LIMIT 1").fetchone()
+            return row['id'] if row else None
+        finally:
+            conn.close()
+
     def test_with_valid_session(self):
-        # Use session 324 (latest running)
-        data = get_session_detail(324)
+        sid = self._get_latest_session_id()
+        if sid is None:
+            pytest.skip("No sessions in database")
+        data = get_session_detail(sid)
         assert data is not None
         assert 'session' in data
         assert 'laps' in data
@@ -36,7 +50,10 @@ class TestSessionComparison:
         assert data is None
 
     def test_comparison_data(self):
-        data = get_session_detail(324)
+        sid = self._get_latest_session_id()
+        if sid is None:
+            pytest.skip("No sessions in database")
+        data = get_session_detail(sid)
         if data and data.get('comparison'):
             comp = data['comparison']
             assert 'metrics' in comp

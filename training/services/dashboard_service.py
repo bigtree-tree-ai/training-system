@@ -75,11 +75,11 @@ def _get_pro_status(conn) -> dict:
     marathon_shape = compute_marathon_shape([dict(s) for s in shape_sessions])
 
     # 恢复状态
-    from training.planning.recovery import assess_recovery_status, _count_consecutive_days
+    from training.planning.recovery import assess_recovery_status, count_consecutive_days
     pmc_row = conn.execute("""
         SELECT tsb, monotony FROM daily_load ORDER BY date DESC LIMIT 1
     """).fetchone()
-    consecutive = _count_consecutive_days(conn)
+    consecutive = count_consecutive_days(conn)
     tsb = pmc_row['tsb'] if pmc_row else None
     monotony = pmc_row['monotony'] if pmc_row else None
     recovery = assess_recovery_status(tsb, consecutive, 0, monotony)
