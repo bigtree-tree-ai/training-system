@@ -52,6 +52,29 @@ def format_duration(seconds):
     return f"{m}:{s:02d}"
 
 
+def format_minutes(minutes):
+    if minutes is None:
+        return "-"
+    total = int(round(minutes))
+    h = total // 60
+    m = total % 60
+    if h > 0:
+        return f"{h}h {m}min"
+    return f"{m}min"
+
+
+def format_race_time(seconds):
+    if seconds is None:
+        return "-"
+    total = int(seconds)
+    h = total // 3600
+    m = (total % 3600) // 60
+    s = total % 60
+    if h > 0:
+        return f"{h}:{m:02d}:{s:02d}"
+    return f"{m}:{s:02d}"
+
+
 def format_sport(sport):
     mapping = {'running': '跑步', 'cycling': '骑行', 'training': '力量训练',
                'hiking': '徒步', 'walking': '步行'}
@@ -60,6 +83,8 @@ def format_sport(sport):
 
 templates.env.filters['pace'] = format_pace
 templates.env.filters['duration'] = format_duration
+templates.env.filters['minutes'] = format_minutes
+templates.env.filters['race_time'] = format_race_time
 templates.env.filters['sport_cn'] = format_sport
 templates.env.globals['base'] = ROOT_PATH
 
@@ -157,3 +182,11 @@ async def recovery_view(request: Request):
         "pro": data.get('pro', {}),
         "pmc": data.get('pmc', {}),
     })
+
+
+@app.get("/coros", response_class=HTMLResponse)
+async def coros_view(request: Request):
+    from training.coros.storage import get_coros_overview
+    from training.services.coros_service import get_coros_dashboard_data
+    data = get_coros_dashboard_data(get_coros_overview())
+    return templates.TemplateResponse(request, "coros.html", {"coros": data})

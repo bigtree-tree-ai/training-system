@@ -118,6 +118,7 @@ h3 { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
     gap: 12px;
     margin-bottom: 24px;
 }
+.cards-grid-4 { grid-template-columns: repeat(4, 1fr); }
 .cards-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -134,6 +135,7 @@ h3 { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
     border: 1px solid var(--border);
 }
 .card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.compact-card { padding: 16px; }
 
 .card-label {
     font-size: 0.75rem;
@@ -198,6 +200,7 @@ h3 { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
     font-weight: 600;
     letter-spacing: 0.02em;
 }
+.status-warning { background: linear-gradient(135deg, var(--warning), #B45309); }
 
 /* === 标签 === */
 .tag {
@@ -237,6 +240,7 @@ h3 { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
     box-shadow: var(--shadow);
     border: 1px solid var(--border);
 }
+.flat-table { box-shadow: none; }
 .data-table {
     width: 100%;
     border-collapse: collapse;
@@ -316,7 +320,9 @@ h3 { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
 
 /* === 通用区段 === */
 .section { margin-bottom: 24px; }
+.section h2 { margin-bottom: 12px; }
 .section h3 { font-size: 1rem; margin-bottom: 12px; }
+.sync-status { color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; }
 .back-link { color: var(--primary); text-decoration: none; font-size: 0.875rem; display: inline-block; margin-bottom: 16px; font-weight: 500; }
 .back-link:hover { text-decoration: underline; }
 
@@ -475,6 +481,7 @@ h3 { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
     .countdown-number { font-size: 1.5rem; }
 
     .cards-grid { grid-template-columns: 1fr; gap: 10px; }
+    .cards-grid-4 { grid-template-columns: repeat(2, 1fr); }
     .cards-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .card { padding: 16px; }
     .card-value { font-size: 1.5rem; }
@@ -511,5 +518,6 @@ h3 { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
 @media (max-width: 480px) {
     .container { padding: 12px; }
     .cards-row { grid-template-columns: 1fr; }
+    .cards-grid-4 { grid-template-columns: 1fr; }
     .card-value { font-size: 1.35rem; }
 }

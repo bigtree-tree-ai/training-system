@@ -25,3 +25,5 @@ training_data/*.fit
 
 # Environment
 .env
+.coros_auth.json
+coros_auth.json

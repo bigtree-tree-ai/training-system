@@ -175,3 +175,159 @@ CREATE TABLE IF NOT EXISTS athlete_status (
 -- athlete_status 默认数据（无记录时的基线值）
 INSERT OR IGNORE INTO athlete_status (date, sleep_hours, sleep_quality, resting_hr, soreness_level, fatigue_level, mood)
 VALUES ('default', 7.0, 3, 60, 2, 2, 3);
+
+-- coros_sync_runs: COROS MCP每日同步运行记录
+CREATE TABLE IF NOT EXISTS coros_sync_runs (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    started_at          TEXT DEFAULT (datetime('now')),
+    finished_at         TEXT,
+    status              TEXT NOT NULL DEFAULT 'running',
+    days                INTEGER,
+    message             TEXT,
+    tool_results        TEXT
+);
+
+-- coros_profile: COROS用户基础信息（单行快照）
+CREATE TABLE IF NOT EXISTS coros_profile (
+    id                  INTEGER PRIMARY KEY CHECK (id = 1),
+    nickname            TEXT,
+    height_cm           REAL,
+    weight_kg           REAL,
+    birthday            TEXT,
+    age                 INTEGER,
+    gender              TEXT,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- coros_devices: COROS绑定设备
+CREATE TABLE IF NOT EXISTS coros_devices (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    bluetooth_id        TEXT UNIQUE,
+    name                TEXT,
+    model_name          TEXT,
+    serial_number       TEXT,
+    warranty_expires    TEXT,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- coros_recovery_snapshots: 恢复状态快照
+CREATE TABLE IF NOT EXISTS coros_recovery_snapshots (
+    id                              INTEGER PRIMARY KEY AUTOINCREMENT,
+    captured_at                     TEXT NOT NULL DEFAULT (datetime('now')),
+    recovery_pct                    INTEGER,
+    level                           TEXT,
+    estimated_full_recovery_hours   REAL,
+    raw_text                        TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_coros_recovery_captured ON coros_recovery_snapshots(captured_at);
+
+-- coros_fitness_snapshots: 跑力评估快照
+CREATE TABLE IF NOT EXISTS coros_fitness_snapshots (
+    id                          INTEGER PRIMARY KEY AUTOINCREMENT,
+    captured_at                 TEXT NOT NULL DEFAULT (datetime('now')),
+    vo2max                      REAL,
+    running_level               REAL,
+    threshold_pace_sec          INTEGER,
+    five_k_prediction_sec       INTEGER,
+    ten_k_prediction_sec        INTEGER,
+    half_marathon_prediction_sec INTEGER,
+    marathon_prediction_sec     INTEGER,
+    raw_text                    TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_coros_fitness_captured ON coros_fitness_snapshots(captured_at);
+
+-- coros_training_load: COROS训练负荷评估
+CREATE TABLE IF NOT EXISTS coros_training_load (
+    date                TEXT PRIMARY KEY,
+    comment             TEXT,
+    short_term_load     REAL,
+    long_term_load      REAL,
+    load_ratio          REAL,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- coros_daily_health: 日常非运动健康汇总
+CREATE TABLE IF NOT EXISTS coros_daily_health (
+    date                TEXT PRIMARY KEY,
+    steps               INTEGER,
+    calories_kcal       INTEGER,
+    exercise_min        INTEGER,
+    stress_avg          INTEGER,
+    sleep_score         INTEGER,
+    sleep_total_min     INTEGER,
+    sleep_awake_min     INTEGER,
+    sleep_deep_min      INTEGER,
+    sleep_light_min     INTEGER,
+    sleep_rem_min       INTEGER,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- coros_sleep: 睡眠明细
+CREATE TABLE IF NOT EXISTS coros_sleep (
+    date                TEXT PRIMARY KEY,
+    sleep_score         INTEGER,
+    main_sleep_min      INTEGER,
+    deep_sleep_pct      INTEGER,
+    light_sleep_pct     INTEGER,
+    rem_pct             INTEGER,
+    awake_pct           INTEGER,
+    awake_min           INTEGER,
+    awake_count         INTEGER,
+    sleep_window        TEXT,
+    naps_total_min      INTEGER,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- coros_hrv: HRV评估
+CREATE TABLE IF NOT EXISTS coros_hrv (
+    date                TEXT PRIMARY KEY,
+    hrv_avg_ms          INTEGER,
+    evaluation          TEXT,
+    normal_low_ms       INTEGER,
+    normal_high_ms      INTEGER,
+    baseline_ms         INTEGER,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- coros_heart_rate_daily: 每日心率
+CREATE TABLE IF NOT EXISTS coros_heart_rate_daily (
+    date                TEXT PRIMARY KEY,
+    avg_hr              INTEGER,
+    min_hr              INTEGER,
+    max_hr              INTEGER,
+    resting_hr          INTEGER,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- coros_stress_daily: 每日压力
+CREATE TABLE IF NOT EXISTS coros_stress_daily (
+    date                TEXT PRIMARY KEY,
+    stress_avg          INTEGER,
+    level               TEXT,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- coros_training_schedule: COROS训练计划
+CREATE TABLE IF NOT EXISTS coros_training_schedule (
+    date                TEXT PRIMARY KEY,
+    title               TEXT,
+    distance_km         REAL,
+    estimated_time_min  REAL,
+    load_tl             REAL,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);
+
+-- coros_sport_records: COROS运动记录列表（MCP接口可用时写入）
+CREATE TABLE IF NOT EXISTS coros_sport_records (
+    label_id            TEXT PRIMARY KEY,
+    date                TEXT,
+    sport_type          INTEGER,
+    title               TEXT,
+    distance_km         REAL,
+    duration_min        REAL,
+    avg_pace_sec        INTEGER,
+    avg_speed           REAL,
+    location            TEXT,
+    raw_text            TEXT,
+    updated_at          TEXT DEFAULT (datetime('now'))
+);

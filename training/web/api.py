@@ -165,6 +165,13 @@ def run_pipeline(key: str = None):
         raise HTTPException(status_code=403, detail="Invalid API key")
     results = []
     try:
+        from training.coros.sync import CorosSyncService
+        coros = CorosSyncService().sync(days=14)
+        results.append(f"COROS同步完成: {sum(coros['persisted'].values())}项")
+    except Exception as e:
+        results.append(f"COROS同步跳过/失败: {e}")
+
+    try:
         from training.data_import.batch_import import scan_and_import
         scan_and_import()
         results.append("FIT导入完成")
@@ -198,3 +205,21 @@ def run_pipeline(key: str = None):
 async def summary():
     from training.services.dashboard_service import get_summary_data
     return get_summary_data()
+
+
+@router.get("/coros/overview")
+async def coros_overview():
+    from training.coros.storage import get_coros_overview
+    from training.services.coros_service import get_coros_dashboard_data
+    return get_coros_dashboard_data(get_coros_overview())
+
+
+@router.post("/coros/sync")
+def coros_sync(days: int = 14, key: str = None):
+    import os
+    from fastapi import HTTPException
+    expected = os.getenv("TRAIN_API_KEY", "training-v3-key")
+    if key != expected:
+        raise HTTPException(status_code=403, detail="Invalid API key")
+    from training.coros.sync import CorosSyncService
+    return CorosSyncService().sync(days=days)

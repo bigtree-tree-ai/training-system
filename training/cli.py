@@ -17,6 +17,9 @@ def main():
         print("  compare-session <id>   单次训练历史对比")
         print("  plan [weeks]           生成训练计划(默认4周)")
         print("  recovery               身体恢复状态报告")
+        print("  coros-login            授权COROS MCP并保存本地刷新凭据")
+        print("  coros-sync [days]      通过COROS MCP同步健康/训练数据")
+        print("  coros-overview         查看COROS结构化数据概览")
         print("  serve                  启动Web服务")
         return
 
@@ -97,6 +100,26 @@ def main():
     elif cmd == 'recovery':
         from training.planning.recovery import get_recovery_report
         print(get_recovery_report())
+
+    elif cmd == 'coros-sync':
+        from training.coros.sync import CorosSyncService
+        days = int(sys.argv[2]) if len(sys.argv) > 2 else 14
+        result = CorosSyncService().sync(days=days)
+        print("COROS MCP同步完成")
+        for name, count in result["persisted"].items():
+            print(f"  {name}: {count}")
+
+    elif cmd == 'coros-login':
+        from training.coros.oauth import login_with_browser
+        result = login_with_browser()
+        print(f"COROS授权完成: {result['auth_file']}")
+        print(f"Refresh token: {'yes' if result['has_refresh_token'] else 'no'}")
+
+    elif cmd == 'coros-overview':
+        import json
+        from training.coros.storage import get_coros_overview
+        from training.services.coros_service import get_coros_dashboard_data
+        print(json.dumps(get_coros_dashboard_data(get_coros_overview()), ensure_ascii=False, indent=2))
 
     elif cmd == 'serve':
         import uvicorn

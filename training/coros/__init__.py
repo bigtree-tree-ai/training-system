@@ -1,0 +1,2 @@
+"""COROS MCP integration package."""
+
