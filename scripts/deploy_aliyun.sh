@@ -15,7 +15,7 @@ SSH_BASE=(-p "$SERVER_PORT" -o StrictHostKeyChecking=no -o ConnectTimeout=10)
 if [[ -n "$SERVER_PASS" ]] && command -v sshpass >/dev/null 2>&1; then
   SSH=(sshpass -p "$SERVER_PASS" ssh "${SSH_BASE[@]}" -o PubkeyAuthentication=no "${SERVER_USER}@${SERVER_HOST}")
 else
-  SSH=(ssh "${SSH_BASE[@]}" "${SERVER_USER}@${SERVER_HOST}")
+  SSH=(ssh "${SSH_BASE[@]}" -o BatchMode=yes "${SERVER_USER}@${SERVER_HOST}")
 fi
 
 echo "== Training System Aliyun deploy =="
