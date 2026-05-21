@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from training.storage import db
 
 
@@ -112,6 +114,33 @@ def test_coros_sync_persists_structured_data(monkeypatch, tmp_path):
     assert overview["daily_health"][0]["steps"] == 2351
     assert overview["sleep"][0]["awake_min"] == 60
     assert overview["devices"][0]["name"] == "COROS PACE 4"
+
+
+def test_coros_sync_records_client_initialization_failure(monkeypatch, tmp_path):
+    _use_temp_db(monkeypatch, tmp_path)
+
+    from training.coros import sync
+
+    class MissingAuthClient:
+        def __init__(self):
+            raise RuntimeError("COROS auth is missing")
+
+    monkeypatch.setattr(sync, "CorosMcpClient", MissingAuthClient)
+
+    with pytest.raises(RuntimeError, match="COROS auth is missing"):
+        sync.CorosSyncService().sync(days=14)
+
+    conn = db.get_conn()
+    try:
+        row = conn.execute(
+            "SELECT days, status, message FROM coros_sync_runs ORDER BY id DESC LIMIT 1"
+        ).fetchone()
+    finally:
+        conn.close()
+
+    assert row["days"] == 14
+    assert row["status"] == "failed"
+    assert "COROS auth is missing" in row["message"]
 
 
 def test_coros_overview_has_four_structured_sections(monkeypatch, tmp_path):

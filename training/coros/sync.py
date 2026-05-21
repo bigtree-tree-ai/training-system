@@ -24,7 +24,7 @@ from training.coros import storage
 
 class CorosSyncService:
     def __init__(self, client=None, timezone: str = "Asia/Shanghai"):
-        self.client = client or CorosMcpClient()
+        self.client = client
         self.timezone = timezone
 
     def sync(self, days: int = 14) -> dict:
@@ -46,6 +46,9 @@ class CorosSyncService:
         }
 
         try:
+            if self.client is None:
+                self.client = CorosMcpClient()
+
             today = date.today()
             start_date = (today - timedelta(days=days - 1)).strftime("%Y%m%d")
             end_date = today.strftime("%Y%m%d")
