@@ -121,6 +121,23 @@ def main():
     print(f"missing={dc.missing}")
     print(f"stale={dc.stale}")
 
+    # === 阶段 B：聚合服务 + LLM 输入 ===
+    _section("SciencePrescription（阶段 B 聚合）")
+    from training.application.science_today import build_today
+    from training.science.llm_prompts import build_payload
+    rx = build_today()
+    print(f"verdict: {rx.verdict}")
+    print(f"confidence: {rx.confidence}")
+    print("\n--- why (前 5 条) ---")
+    for w in rx.why[:5]:
+        print(f"  · {w}")
+    print("\n--- next_actions (前 5 条) ---")
+    for a in rx.next_actions[:5]:
+        print(f"  → {a}")
+
+    payload = build_payload(rx)
+    print(f"\nLLM messages: {len(payload['messages'])} 条（含 4 few-shot）")
+
     print("\n[demo done]")
 
 

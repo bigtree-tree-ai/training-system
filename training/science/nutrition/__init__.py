@@ -7,6 +7,14 @@ from training.science.nutrition.energy_balance import (
 )
 from training.science.nutrition.macros import macros_target
 from training.science.nutrition.fueling import fueling_plan
+from training.science.nutrition.caffeine import plan as caffeine_plan, sleep_safe as caffeine_sleep_safe
+from training.science.nutrition.hydration import (
+    daily_baseline_ml,
+    training_intake_ml_per_h,
+    sweat_loss_pct_body_weight,
+    hydration_alert,
+)
+from training.science.nutrition.electrolytes import plan as electrolytes_plan, sodium_per_h
 
 __all__ = [
     "compute_tdee",
@@ -14,4 +22,12 @@ __all__ = [
     "energy_balance_report",
     "macros_target",
     "fueling_plan",
+    "caffeine_plan",
+    "caffeine_sleep_safe",
+    "daily_baseline_ml",
+    "training_intake_ml_per_h",
+    "sweat_loss_pct_body_weight",
+    "hydration_alert",
+    "electrolytes_plan",
+    "sodium_per_h",
 ]
