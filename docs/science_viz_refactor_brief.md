@@ -96,23 +96,24 @@
 - [x] A.8 部署阿里云：main `e14f8d4`，service active，8 张新表已在线，API 200
 - [x] 验收文档：`docs/stage_a_acceptance.md`
 
-### ⏳ 阶段 B（下一步）
+### ✅ 阶段 B 已完成并部署上线（2026-05-26）
 
-分支：`feature/science-viz-stage-b`（待建）
-- 迁移 `interpretations.py` 到 `science/*/prescriptions.py`
-- LT/CV 动态学习管线
-- LLM few-shot + 结构化 schema
-- 康复个体化（伤病结构化已就位，可深度用）
-- 营养完整管线（nutrition_intake 表已就位，可开始记录）
-- 阶段 B 验收 + 部署（feature 分支 → rebase main → 部署）
+- B.1 LoadProfile verdict 修正（低 CTL 不再误判 peak）+ LT/CV 动态学习
+- B.2 prescriptions 解读迁移（按学科 3 文件，含部位 prehab 库 + REDs 三档）
+- B.3 营养扩展（caffeine/hydration/electrolytes）
+- B.4 LLM few-shot + 结构化 schema（4 examples）
+- B.5 SciencePrescription 聚合服务（build_today 一键产出）
+- B.6 23 个新测，161 全套件 PASSED；main `8b3a29b` 部署阿里云
+- 验收：`docs/stage_b_acceptance.md`；日志：`docs/CHANGELOG.md`
 
-### ⏳ 阶段 C
+### ⏳ 阶段 C（进行中）
 
 分支：`feature/science-viz-stage-c`
-- ECharts/Leaflet/Alpine.js/HTMX
-- 一/二/三级页面重做
-- session_detail GPS+海拔联动 + HR/Pace 三轴时序
-- 信赖感顶栏
+- ECharts 5 + Leaflet + Alpine.js + HTMX（CDN）
+- professional_v2_today（决策台 + PMC + 风险雷达）
+- professional_v2_session（GPS 地图 + 海拔剖面 + HR/Pace 三轴）
+- 信赖感顶栏（confidence + 模型卡）
+- api_v2 路由
 
 ---
 
