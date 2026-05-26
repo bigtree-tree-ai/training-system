@@ -93,6 +93,10 @@ def _verdict(ctl: float, atl: float, tsb: float, acwr: Optional[float], monotony
         return "high_injury_risk"
     if monotony is not None and monotony >= 2.0:
         return "monotonous_overreach"
+    # 低体能基线：CTL < 20 时不论 TSB 都判为 detrain（避免长期休息被误判 peak）
+    # 参考 Friel：peak 状态需要在已有 CTL 基础上的恢复，而非低 CTL+低 ATL 的"假休息态"
+    if ctl < 20 and atl < 5:
+        return "detrain"
     if tsb < -30:
         return "overreach"
     if tsb < -10:
