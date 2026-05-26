@@ -31,7 +31,7 @@ from training.content.interpretations import (
 import os
 ROOT_PATH = os.environ.get("ROOT_PATH", "")
 
-app = FastAPI(title="训练分析系统 v3.0", root_path=ROOT_PATH)
+app = FastAPI(title="训练分析系统 v3.0")
 
 
 @app.middleware("http")
@@ -44,6 +44,7 @@ async def enforce_dashboard_auth(request: Request, call_next):
 templates_dir = Path(__file__).parent / "templates"
 static_dir = Path(__file__).parent / "static"
 templates = Jinja2Templates(directory=str(templates_dir))
+templates.env.globals["ROOT_PATH"] = ROOT_PATH
 app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 app.include_router(api_router, prefix="/api")
 app.include_router(product_api_router, prefix="/api/product")
