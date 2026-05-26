@@ -83,7 +83,7 @@ WorkingDirectory=${DEPLOY_DIR}
 Environment=TRAIN_WEB_HOST=0.0.0.0
 Environment=TRAIN_WEB_PORT=${WEB_PORT}
 Environment=ROOT_PATH=${ROOT_PATH}
-Environment=TRAIN_AUTH_REQUIRED=1
+Environment=TRAIN_AUTH_REQUIRED=0
 EnvironmentFile=-${DEPLOY_DIR}/.env
 Environment=PYTHONUNBUFFERED=1
 ExecStart=/usr/bin/python3 -m uvicorn training.web.app:app --host 0.0.0.0 --port ${WEB_PORT}
