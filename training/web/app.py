@@ -31,7 +31,7 @@ from training.content.interpretations import (
 import os
 ROOT_PATH = os.environ.get("ROOT_PATH", "")
 
-app = FastAPI(title="训练分析系统 v3.0")
+app = FastAPI(title="训练分析系统 v3.0", root_path=ROOT_PATH)
 
 
 @app.middleware("http")
