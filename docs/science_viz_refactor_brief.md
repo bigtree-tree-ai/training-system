@@ -129,6 +129,15 @@
 | A 知识体系 + 数据补齐 | `e14f8d4` | ✅ 阿里云 | 35 单测 + 138 全套件 |
 | B 分析升级 + 个体化 | `8b3a29b` | ✅ 阿里云 | 23 单测 + 161 全套件 |
 | C 可视化重构 | `e538bec` | ✅ 阿里云 | Playwright 3 页 0 错误 |
+| 关闭 Basic Auth | `6c50508` | ✅ 阿里云 | bigtree.ink/training/ 公开 200 |
+
+## 访问入口（无需账号）
+
+- **决策台**：https://bigtree.ink/training/v2/today
+- **趋势页**：https://bigtree.ink/training/v2/trends
+- **全息解剖**：https://bigtree.ink/training/v2/sessions/{session_id}
+- **v1 兼容**：https://bigtree.ink/training/
+- **API**：https://bigtree.ink/training/api/v2/today（JSON）
 
 ---
 

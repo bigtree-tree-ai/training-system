@@ -1,5 +1,19 @@
 # Changelog — 科学知识体系重构
 
+## 2026-05-27 关闭 Basic Auth
+
+### Removed
+- `https://bigtree.ink/training/` 不再弹账号密码窗口
+- 服务器 systemd unit `TRAIN_AUTH_REQUIRED=1 → 0`，`daemon-reload` + restart
+- `scripts/deploy_aliyun.sh` 同步改为 `=0`（commit `6c50508`），保证未来重新部署也保持关闭
+- `.env` 的 `TRAIN_AUTH_USER/PASSWORD` 仍保留（不再被 auth 中间件读取，但产品端无副作用）
+
+### Verified
+- `https://bigtree.ink/training/` HTTP 200（无 auth）
+- `https://bigtree.ink/training/v2/today` HTTP 200
+- `https://bigtree.ink/training/v2/trends` HTTP 200
+- `https://bigtree.ink/training/api/v2/today` HTTP 200
+
 ## 2026-05-26 阶段 C：可视化重构 + 三级页面（含部署修复）
 
 ### Fixed
